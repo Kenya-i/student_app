@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <% String nameErrorMsg = (String)request.getAttribute("nameErrorMsg"); %>
 <% String passErrorMsg = (String)request.getAttribute("passErrorMsg"); %>
+<% String passConfirmErrorMsg = (String)request.getAttribute("passConfirmErrorMsg"); %>
 <% String registerErrorMsg = (String)request.getAttribute("registerErrorMsg"); %>
 <% if(session.getAttribute("user") == null) { %>
 <!DOCTYPE html>
@@ -24,6 +25,13 @@
 		<input type="password" name="password" maxlength="20">
 		<% if(passErrorMsg != null) { %>
 		<%= passErrorMsg %>
+		<% } %>
+	</div>
+	<div>
+	パスワード確認:
+		<input type="password" name="password-confirmation" maxlength="20">
+		<% if(passConfirmErrorMsg != null) { %>
+		<%= passConfirmErrorMsg %>
 		<% } %>
 	</div>
 	<% if(registerErrorMsg != null) { %>

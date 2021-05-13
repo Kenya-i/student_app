@@ -18,20 +18,16 @@ import model.UserDto;
 public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-       
 	
     public Login() {
         super();
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		doPost(request, response);
 		
 	}
-
-	
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -63,12 +59,8 @@ public class Login extends HttpServlet {
 				return;
 			}
 			
-			System.out.println(name);
-			
 			LoginLogic logic = new LoginLogic();
 			UserDto dto = logic.executeSelect(name, password);
-			
-			System.out.println(dto);
 			
 			if(dto.getName() != null) {
 				

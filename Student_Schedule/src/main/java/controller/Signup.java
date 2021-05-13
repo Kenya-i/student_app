@@ -50,13 +50,16 @@ public class Signup extends HttpServlet {
 			
 			String name = request.getParameter("name");
 			String password = request.getParameter("password");
+			String passwordConfirmation = request.getParameter("password-confirmation");
 			
 			UserDto dto = new UserDto();
 			
-			boolean validateName = validateName(name, dto, request);
-			boolean validatePass = validatePass(password, dto, request);
+			boolean validateName = validateName(name, request);
+			boolean validatePass = validatePass(password, request);
+			boolean validatePassConfirmation = validatePassConfirmation
+					                           (password, passwordConfirmation, request);
 			
-			if(validateName == false || validatePass == false) {
+			if(validateName == false || validatePass == false || validatePassConfirmation == false) {
 				System.out.println("success");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("signupPage.jsp");
 	    		dispatcher.forward(request, response);
@@ -106,14 +109,13 @@ public class Signup extends HttpServlet {
 		
 	}
 	
-	private boolean validateName(String name, UserDto dto, HttpServletRequest request) {
+	private boolean validateName(String name, HttpServletRequest request) {
 		
 		boolean success = false;
 		
 		if(name == null || name == "" || name.length() < 1 || name.length() > 20) {
 			final String nameErrorMsg = "名前は1字以上20字以内で入力してください。";
-			dto.setNameError(nameErrorMsg);
-			request.setAttribute("nameErrorMsg", (Object)dto.getNameError());
+			request.setAttribute("nameErrorMsg", nameErrorMsg);
 			System.out.println(request.getAttribute("nameErrorMsg"));
 			
 			success = false;
@@ -126,14 +128,13 @@ public class Signup extends HttpServlet {
 		return success;
 	}
 	
-	private boolean validatePass(String password, UserDto dto, HttpServletRequest request) {
+	private boolean validatePass(String password, HttpServletRequest request) {
 		
 		boolean success = false;
 		
 		if(password == null || password == "" || password.length() < 6 || password.length() > 20) {
 			final String passErrorMsg = "パスワードは6字以上20字以内で入力してください。";
-			dto.setPassError(passErrorMsg);
-			request.setAttribute("passErrorMsg", (Object)dto.getPassError());
+			request.setAttribute("passErrorMsg", passErrorMsg);
 			System.out.println(request.getAttribute("passErrorMsg"));
 			
 			success = false;
@@ -144,6 +145,30 @@ public class Signup extends HttpServlet {
 		}
 		
 		return success;
+	}
+	
+	private boolean validatePassConfirmation(String password, String passwordConfirmation, HttpServletRequest request) {
+		
+		boolean success = false;
+		
+		if(password == passwordConfirmation) {
+			success = true;
+			if(passwordConfirmation == null || passwordConfirmation == "") {
+				success = false;
+			}
+		} else {
+			
+			final String passConfirmErrorMsg = "確認用パスワードが一致しませんでした。もう一度お試しください。";
+			request.setAttribute("passConfirmErrorMsg", passConfirmErrorMsg);
+			success = false;
+			
+			if(passwordConfirmation == null || passwordConfirmation == "") {
+				request.removeAttribute("passConfirmErrorMsg");
+			}
+		}
+		
+		return success;
+		
 	}
 
 }

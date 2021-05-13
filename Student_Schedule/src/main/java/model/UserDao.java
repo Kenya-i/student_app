@@ -44,12 +44,11 @@ public class UserDao {
 			con.setAutoCommit(false);
 			
 			StringBuffer sb1 = new StringBuffer();
-			
-			sb1.append(" SELECT ");
-			sb1.append(" NAME, ");
+			sb1.append(" SELECT   ");
+			sb1.append(" NAME,    ");
 			sb1.append(" PASSWORD ");
-			sb1.append(" FROM ");
-			sb1.append(" USER ");
+			sb1.append(" FROM     ");
+			sb1.append(" USER     ");
 			
 			ps = con.prepareStatement(sb1.toString());
 			
@@ -67,8 +66,6 @@ public class UserDao {
 					successes[0] = false; // 登録できない(false) →失敗
 					successes[1] = false; // 同じデータが存在する(false)→失敗
 				}
-				System.out.println(successes[0]);
-				System.out.println("ホゲーーーーー");
 			}
 			
 			if(successes[1]) { // 同じデータが存在しないなら(true)
@@ -205,7 +202,7 @@ public class UserDao {
 			StringBuffer sb = new StringBuffer();
 			
 			sb.append("SELECT        ");
-//			sb.append(" ID           ");
+			sb.append(" ID,          ");
 			sb.append(" NAME         ");
 			sb.append(" FROM         ");
 			sb.append(" USER         ");
@@ -228,7 +225,7 @@ public class UserDao {
 			System.out.println(rs);
 			
 			if(rs.next()) {
-//				dto.setId(rs.getString("ID"));
+				dto.setId(String.valueOf(rs.getString("ID")));
 				dto.setName(rs.getString("NAME"));
 			}
 			

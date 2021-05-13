@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="model.UserDto" %>
+<% System.out.println(session.getAttribute("user")); %>
 <% if(session.getAttribute("user") == null) {
 	response.sendRedirect("index.jsp");
 	} else {
- %>
- <% UserDto userWithSession = (UserDto)session.getAttribute("user"); %>
+%>
+<% UserDto userWithSession = (UserDto)session.getAttribute("user"); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,7 @@
 <body>
 	<div>homeです</div>
 	<div><%= userWithSession.getName() %>さんの生徒一覧</div>
+	<div><%= userWithSession.getId() %></div>
 	<div><a href="studentRegister.jsp">生徒の登録</a></div>
 	<div><a href="Logout">ログアウト</a></div>
 </body>
