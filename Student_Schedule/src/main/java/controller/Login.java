@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.LoginLogic;
+import model.StudentDto;
+import model.StudentMemberLogic;
 import model.UserDto;
 
 
@@ -54,24 +57,53 @@ public class Login extends HttpServlet {
 			boolean validatePass = validatePass(password);
 			
 			if(validateName == false || validatePass == false) {
-				System.out.println("success");
-				response.sendRedirect("signupPage.jsp");
-				return;
+//				response.sendRedirect("loginPage.jsp");
+//				return;
+				final String errorMsg = "ユーザーが見つかりませんでした。";
+				request.setAttribute("errorMsg", errorMsg);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("loginPage.jsp");
+				dispatcher.forward(request, response);
 			}
 			
 			LoginLogic logic = new LoginLogic();
 			UserDto dto = logic.executeSelect(name, password);
 			
+			System.out.println("userDtoは突破したよ!!!!!!!");
+			System.out.println(dto.getName());
+			
+			
+//			if(dto != null) {
+//				StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
+//				List<StudentDto> studentList = studentMemberLogic.selectStudentMember(dto);
+//			}
+			
 			if(dto.getName() != null) {
 				
+				StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
+				List<StudentDto> studentList = studentMemberLogic.selectStudentMember(dto);
+				
 				session.setAttribute("user", dto);
+				session.setAttribute("studentList", studentList);
+				
+				System.out.println(session.getAttribute("studentList") instanceof List);
+				
+//				@SuppressWarnings("unchecked")
+//				List<StudentDto> studentList = (List<StudentDto>)session.getAttribute("studentList");
+				
+				
+				System.out.println("大丈夫!成功だ!");
+//				System.out.println(studentList == null);
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
 	    		dispatcher.forward(request, response);
 	    		
 			} else {
 				
-				response.sendRedirect("loginPage.jsp");
+				final String errorMsg = "ユーザーが見つかりませんでした。";
+				request.setAttribute("errorMsg", errorMsg);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("loginPage.jsp");
+				dispatcher.forward(request, response);
+				
 			}
 			
 		}
@@ -82,7 +114,7 @@ public class Login extends HttpServlet {
 		
 		boolean success = false;
 		
-		if(name != null && name != "" && name.length() >= 1) {
+		if(name != null || name != "" || name.length() >= 1) {
 			success = true;
 		}
 		

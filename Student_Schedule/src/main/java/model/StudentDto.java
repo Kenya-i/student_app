@@ -2,10 +2,19 @@ package model;
 
 public class StudentDto {
 	
+	private int id;
 	private String name;
 	private String schoolGrade;
 	private String gender;
 	private Integer teacherId;
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
+	}
 	
 	public void setName(String name) {
 		this.name = name;

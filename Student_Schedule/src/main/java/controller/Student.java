@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -62,6 +63,17 @@ public class Student extends HttpServlet {
 			
 			StudentLogic logic = new StudentLogic();
 			boolean successInsert = logic.executeInsert(dto);
+			
+			
+			if(session.getAttribute("studentList") != null) {
+				
+				@SuppressWarnings("unchecked")
+				List<StudentDto> studentList = (List<StudentDto>)session.getAttribute("studentList");
+				studentList.add(dto);
+				session.setAttribute("studentList", studentList);
+				
+			}
+			
 			
 			if(successInsert) {
 				response.sendRedirect("home.jsp");

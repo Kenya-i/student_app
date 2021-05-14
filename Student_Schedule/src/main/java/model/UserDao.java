@@ -223,13 +223,29 @@ public class UserDao {
 			rs = ps.executeQuery();
 			
 			System.out.println(rs);
+			System.out.println("もしかして失敗?");
 			
-			if(rs.next()) {
+//			if(rs == null) {
+//				
+//			}
+			
+			if(rs == null) {
+				System.out.println("rsはnullです");
+				dto = null;
+			} else if(rs.next()) {
 				dto.setId(String.valueOf(rs.getString("ID")));
 				dto.setName(rs.getString("NAME"));
 			}
+//			if(rs.next()) {
+//				dto.setId(String.valueOf(rs.getString("ID")));
+//				dto.setName(rs.getString("NAME"));
+//			} else {
+//				dto = null;
+//			}
+			System.out.println("ワイはここまで来たんや!!");
 			
 		} catch(SQLException e) {
+			
 			System.out.println("error!!!");
 			e.printStackTrace();
 			
@@ -239,6 +255,7 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
+					System.out.println("33333333");
 					e.printStackTrace();
 				}
 			}
@@ -247,6 +264,7 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
+					System.out.println("2222222");
 					e.printStackTrace();
 				}
 			}
@@ -255,6 +273,7 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
+					System.out.println("11111111");
 					e.printStackTrace();
 				}
 			}
