@@ -34,8 +34,6 @@ public class Signup extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("hello3");
-		
 		response.setContentType("text/html; charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
@@ -52,7 +50,7 @@ public class Signup extends HttpServlet {
 			String password = request.getParameter("password");
 			String passwordConfirmation = request.getParameter("password-confirmation");
 			
-			UserDto dto = new UserDto();
+			UserDto userDto = new UserDto();
 			
 			boolean validateName = validateName(name, request);
 			boolean validatePass = validatePass(password, request);
@@ -66,31 +64,45 @@ public class Signup extends HttpServlet {
 				return;
 			}
 			
-			dto.setName(name);
-			dto.setPassword(password);
-			
-			System.out.println(dto.getName());
-			System.out.println(dto.getPassword());
+			userDto.setName(name);
+			userDto.setPassword(password);
 			
 			SignupLogic signup = new SignupLogic();
-	    	boolean[] successInserts = signup.isInsertable(dto);
+	    	Object[] insertResults = signup.isInsertable(userDto);
+
+	    	System.out.println("よくここまでたどり着いたらおぬしよ");
 	    	
-	    	System.out.println("Signup.javaのboolean");
-	    	System.out.println(successInserts[0]);
-	    	System.out.println(successInserts[1]);
+//	    	System.out.println(insertResults[1].toString());
 	    	
-	    	if(successInserts[0]) {
+	    	
+	    	String userId;
+	    	if(insertResults[1] != null) {
+	    		userId = insertResults[1].toString();
+	    		userDto.setId(userId);
+//		    	System.out.println(objStr);
+//		    	userId = Integer.parseInt(objStr);
+//		    	userDto.setId(userId);
+	    	}
+	    	
+	    	String objStr2 = insertResults[0].toString();
+	    	boolean bool = Boolean.valueOf(objStr2);
+	    	
+	    	
+	    	if(bool) {
 	    		
-	    		session.setAttribute("user", dto);
+//	    		LoginLogic logic = new LoginLogic();
+//				UserDto userDto2 = logic.executeSelect(name, password);
+	    		
+	    		session.setAttribute("user", userDto);
 	    		
 	    		RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
 	    		dispatcher.forward(request, response);
 	    		
-	    	} else if(successInserts[1] == false) {
+	    	} else if(bool == false || insertResults[1] != null) {
 	    		
 	    		final String registerErrorMsg = "登録に失敗しました。他の入力を試してください。";
-	    		dto.setRegisterError(registerErrorMsg);
-	    		request.setAttribute("registerErrorMsg", (Object)dto.getRegisterError());
+	    		userDto.setRegisterError(registerErrorMsg);
+	    		request.setAttribute("registerErrorMsg", (Object)userDto.getRegisterError());
 	    		RequestDispatcher dispatcher = request.getRequestDispatcher("signupPage.jsp");
 	    		dispatcher.forward(request, response);
 	    		
@@ -98,10 +110,6 @@ public class Signup extends HttpServlet {
 	    		
 //	    		RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
 //	    		dispatcher.forward(request, response);
-	    		
-	    	} else if(successInserts[0] == false) {
-	    		
-	    		response.sendRedirect("signupPage.jsp");
 	    		
 	    	}
 	    	
@@ -151,13 +159,15 @@ public class Signup extends HttpServlet {
 		
 		boolean success = false;
 		
-		if(password == passwordConfirmation) {
+		if(password.equals(passwordConfirmation)) {
 			success = true;
 			if(passwordConfirmation == null || passwordConfirmation == "") {
 				success = false;
 			}
 		} else {
-			
+			System.out.println(password);
+			System.out.println(passwordConfirmation);
+			System.out.println(password == passwordConfirmation);
 			final String passConfirmErrorMsg = "確認用パスワードが一致しませんでした。もう一度お試しください。";
 			request.setAttribute("passConfirmErrorMsg", passConfirmErrorMsg);
 			success = false;

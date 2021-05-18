@@ -12,6 +12,7 @@
 <title>Sign Up</title>
 </head>
 <body>
+	<%@include file= "header.jsp" %>
 	<form action="Signup" method="post">
 	<div>
 	名前:

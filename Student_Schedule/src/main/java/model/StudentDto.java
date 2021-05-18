@@ -2,11 +2,21 @@ package model;
 
 public class StudentDto {
 	
+	private int studentId;
 	private int id;
 	private String name;
 	private String schoolGrade;
 	private String gender;
-	private Integer teacherId;
+	private int teacherId;
+	private int number;
+	
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+	
+	public int getStudentId() {
+		return studentId;
+	}
 	
 	public void setId(int id) {
 		this.id = id;
@@ -40,11 +50,19 @@ public class StudentDto {
 		return gender;
 	}
 	
-	public void setTeacherId(Integer teahcerId) {
+	public void setTeacherId(int teahcerId) {
 		this.teacherId = teahcerId;
 	}
 	
-	public Integer getTeacherId() {
+	public int getTeacherId() {
 		return teacherId;
+	}
+	
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	
+	public int getNumber() {
+		return number;
 	}
 }

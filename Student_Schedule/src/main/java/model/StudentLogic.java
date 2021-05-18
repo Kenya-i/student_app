@@ -2,13 +2,30 @@ package model;
 
 public class StudentLogic {
 
-	public boolean executeInsert(StudentDto dto) {
+	StudentDao dao = new StudentDao();
+	
+	public int executeInsert(StudentDto dto) {
+				
 		
-		boolean success = false;
+		int key = dao.doInsert(dto);
 		
-		StudentDao dao = new StudentDao();
-		success = dao.doInsert(dto);
+		return key;
+	}
+
+	
+	public boolean executeUpdate(StudentDto dto) {
+		
+		boolean success = dao.doUpdate(dto);
 		
 		return success;
+	}
+	
+	
+	public boolean executeDelete(int studentId) {
+		
+		boolean success = dao.doDelete(studentId);
+		
+		return success;
+		
 	}
 }

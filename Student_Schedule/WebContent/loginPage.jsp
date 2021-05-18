@@ -9,6 +9,7 @@
 <title>Login</title>
 </head>
 <body>
+	<%@include file= "header.jsp" %>
 	<form action="Login" method="post">
 	<div>
 	名前:

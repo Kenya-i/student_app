@@ -8,6 +8,7 @@
 <title>生徒の登録</title>
 </head>
 <body>
+	<%@include file= "header.jsp" %>
 	<div>生徒の登録ページ</div>
 	<form action="Student" method="post">
 		<input type="text" name="name">

@@ -16,8 +16,9 @@ public class UserDao {
 	
 	String USER_PASS = "password";
 	
-	public boolean[] doInsert(UserDto dto) {
+	public Object[] doInsert(UserDto dto) {
 		
+		Object[] obj = new Object[2];
 		
 		try {
 			
@@ -31,12 +32,14 @@ public class UserDao {
 		
 		Connection con = null;
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		PreparedStatement ps2 = null;
+		PreparedStatement ps3 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
 		
 		// 1つ目: データを登録できたかどうか(true) , 2つ目: まだ同じデータが存在しない(true)
-		boolean[] successes = {true, true};
-		
+		boolean success = true;
+		int autoIncrementKey = 0;
 		
 		try {
 			
@@ -63,12 +66,11 @@ public class UserDao {
 				System.out.println(rs.getString("NAME") == dto.getName());
 				if(rs.getString("NAME").equals(dto.getName()) && rs.getString("PASSWORD").equals(dto.getPassword()) ) {
 					System.out.println("whileのなかの失敗だよ");
-					successes[0] = false; // 登録できない(false) →失敗
-					successes[1] = false; // 同じデータが存在する(false)→失敗
+					success = false; // 登録できない(false) →失敗
 				}
 			}
 			
-			if(successes[1]) { // 同じデータが存在しないなら(true)
+			if(success) { // 同じデータが存在しないなら(true)
 				StringBuffer sb2 = new StringBuffer();
 				sb2.append("INSERT INTO USER (");
 				sb2.append(" NAME,            ");
@@ -77,12 +79,37 @@ public class UserDao {
 				sb2.append(" ?,               ");
 				sb2.append(" ? )              ");
 				
-				ps2 = con.prepareStatement(sb2.toString());
+				ps2 = con.prepareStatement(sb2.toString(), java.sql.Statement.RETURN_GENERATED_KEYS);
 				
 				ps2.setString(1, dto.getName());
 				ps2.setString(2, dto.getPassword());
 				
 				ps2.executeUpdate();
+				
+				rs2 = ps2.getGeneratedKeys();
+				
+				
+				if(rs2.next()){
+		             autoIncrementKey = rs2.getInt(1);
+		         }
+				
+				
+				
+//				StringBuffer sb3 = new StringBuffer();
+//				sb3.append(" SELECT           ");
+//				sb3.append(" LAST_INSERT_ID(); ");
+//				
+//				ps3 = con.prepareStatement(sb3.toString());
+//				
+//				rs2 = ps3.executeQuery();
+//				
+//				System.out.println(rs2);
+//				
+//				if(rs2.next()) {
+//					System.out.println("rs2に入りました。");
+//					dto.setId(String.valueOf(rs2.getInt("ID")));
+//				}
+				
 				
 				System.out.println("successに入ったよ");
 			}
@@ -90,11 +117,11 @@ public class UserDao {
 		} catch(SQLException e) {
 			System.out.println("ayayato");
 			e.printStackTrace();
-			successes[0] = false;
+			success = false;
 			
 		} finally {
 
-			if(successes[0]) {
+			if(success) {
 				
 				try {
 
@@ -120,6 +147,19 @@ public class UserDao {
 				
 			}
 			
+			if(rs2 != null) {
+				
+				try {
+					
+					rs2.close();
+					
+				} catch(SQLException e) {
+					System.out.println("rs.closeの例外処理");
+					e.printStackTrace();
+					
+				}
+			}
+			
 			if(rs != null) {
 				
 				try {
@@ -132,10 +172,24 @@ public class UserDao {
 					
 				}
 			}
+
+			if(ps3 != null) {
+				
+				try {
+					
+					ps3.close();
+					
+				} catch(SQLException e) {
+					e.printStackTrace();
+					
+				}
+				
+			}
 			
 			if(ps2 != null) {
 				
 				try {
+					
 					ps2.close();
 					
 				} catch(SQLException e) {
@@ -176,7 +230,13 @@ public class UserDao {
 		}
 		
 		System.out.println("たどり着いたよ!");
-		return successes;
+		obj[0] = success;
+		obj[1] = autoIncrementKey;
+		
+		System.out.println(obj[1]);
+		System.out.println("まだdao");
+		
+		return obj;
 	}
 	
 	

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentMemberDao {
+public class ScheduleListDao {
 	
 	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
 	
@@ -18,7 +18,7 @@ public class StudentMemberDao {
 	
 	String USER_PASS = "password";
 	
-	public List<StudentDto> doSelect(UserDto userDto) {
+	public List<ScheduleDto> doSelect(int scheduleId) {
 		
 		try {
 			Class.forName(DRIVER_NAME);
@@ -31,7 +31,7 @@ public class StudentMemberDao {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
-		List<StudentDto> studentList = new ArrayList<StudentDto>();
+		List<ScheduleDto> scheduleList = new ArrayList<ScheduleDto>();
 		
 		try {
 			
@@ -41,50 +41,34 @@ public class StudentMemberDao {
 			
 			sb.append(" SELECT          ");
 			sb.append("  ID,            ");
-			sb.append("  NAME,          ");
-			sb.append("  SCHOOL_GRADE,  ");
-			sb.append("  GENDER,         ");
-			sb.append("  TEACHER_ID     ");
+			sb.append("  DATE_COLUMN,   ");
+			sb.append("  TIME_COLUMN,   ");
+			sb.append("  SUBJECT,       ");
+			sb.append("  HOMEWORK,      ");
+			sb.append("  MEMO           ");
 			sb.append("  FROM           ");
-			sb.append("  STUDENT        ");
+			sb.append("  SCHEDULE       ");
 			sb.append(" WHERE           ");
-			sb.append("  TEACHER_ID = ? ");
-
+			sb.append("  STUDENT_ID = ? ");
 			
 			ps = con.prepareStatement(sb.toString());
 			
-			int id = Integer.parseInt(userDto.getId());
-			
-			System.out.println(id);
-			System.out.println("ユーザーのID");
-			
-			ps.setInt(1, id);
-			
-			System.out.println("ここ1");
-			
-			System.out.println(ps);
-			
+			ps.setInt(1, scheduleId);
 			rs = ps.executeQuery();
-			
-			System.out.println("ここ2");
 			
 			int num = 0;
 			while(rs.next()) {
-				StudentDto studentDto = new StudentDto();
-				studentDto.setStudentId(rs.getInt("ID"));
-
-				studentDto.setName(rs.getString("NAME"));
-
-				studentDto.setSchoolGrade(rs.getString("SCHOOL_GRADE"));
-
-				studentDto.setGender(rs.getString("GENDER"));
-
-				studentDto.setTeacherId(rs.getInt("TEACHER_ID"));
-
-				studentDto.setNumber(num);
-				
-				studentList.add(studentDto);
-				
+				System.out.println("ここスケジュール!!!");
+				ScheduleDto dto = new ScheduleDto();
+				dto.setScheduleId(rs.getInt("ID"));
+				dto.setDate(rs.getString("DATE_COLUMN"));
+				dto.setTime(rs.getString("TIME_COLUMN"));
+				dto.setSubject(rs.getString("SUBJECT"));
+				dto.setHomework(rs.getString("HOMEWORK"));
+				dto.setMemo(rs.getString("MEMO"));
+				dto.setNumber(num);
+				scheduleList.add(dto);
+				System.out.println(num);
 				num++;
 			}
 			
@@ -141,6 +125,6 @@ public class StudentMemberDao {
 			}
 		}
 		
-		return studentList;
+		return scheduleList;
 	}
 }

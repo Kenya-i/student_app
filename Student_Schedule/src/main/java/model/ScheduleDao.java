@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StudentDao {
-	
+public class ScheduleDao {
+
 	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
 	
 	String JDBC_URL = "jdbc:mysql://localhost/student_app?characterEncoding=UTF-8&serverTimezone=JST&useSSL=false";
@@ -16,7 +16,7 @@ public class StudentDao {
 	
 	String USER_PASS = "password";
 	
-	public int doInsert(StudentDto dto) {
+	public int doInsert(ScheduleDto dto) {
 		
 		try {
 			
@@ -32,6 +32,7 @@ public class StudentDao {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
+		// 1つ目: データを登録できたかどうか(true) , 2つ目: まだ同じデータが存在しない(true)
 		boolean success = true;
 		int autoIncrementKey = 0;
 		
@@ -40,27 +41,27 @@ public class StudentDao {
 			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
 			con.setAutoCommit(false);
 			
+			System.out.println("今ここ");
+			
 			StringBuffer sb = new StringBuffer();
-			sb.append(" INSERT INTO STUDENT ( ");
-			sb.append(" NAME,                 ");
-			sb.append(" SCHOOL_GRADE,         ");
-			sb.append(" GENDER,                  ");
-			sb.append(" TEACHER_ID            ");
-			sb.append(" ) VALUES (            ");
-			sb.append(" ?,                    ");
-			sb.append(" ?,                    ");
-			sb.append(" ?,                    ");
-			sb.append(" ?                   ) ");
-			System.out.println("insert");
+			sb.append(" INSERT INTO SCHEDULE ( ");
+			sb.append(" DATE_COLUMN,           ");
+			sb.append(" TIME_COLUMN,           ");
+			sb.append(" SUBJECT,               ");
+			sb.append(" HOMEWORK,              ");
+			sb.append(" MEMO,                  ");
+			sb.append(" STUDENT_ID             ");
+			sb.append(" ) VALUES (             ");
+			sb.append(" ?, ?, ?, ?, ?, ?     ) ");
 			
 			ps = con.prepareStatement(sb.toString(), java.sql.Statement.RETURN_GENERATED_KEYS);
 			
-			System.out.println(ps);
-			
-			ps.setString(1, dto.getName());
-			ps.setString(2, dto.getSchoolGrade());
-			ps.setString(3, dto.getGender());
-			ps.setInt(4, dto.getTeacherId());
+			ps.setString(1, dto.getDate());
+			ps.setString(2,  dto.getTime());
+			ps.setString(3, dto.getSubject());
+			ps.setString(4, dto.getHomework());
+			ps.setString(5, dto.getMemo());
+			ps.setInt(6,  dto.getStudentId());
 			
 			ps.executeUpdate();
 			
@@ -68,33 +69,39 @@ public class StudentDao {
 			
 			if(rs.next()) {
 				autoIncrementKey = rs.getInt(1);
-				success = true;
 			}
 			
-			
+			System.out.println("成功しましたtたたたた");
+			success = true;
 		} catch(SQLException e) {
-			System.out.println(e);
-			System.out.println("例外");
 			
 			e.printStackTrace();
 			success = false;
 			
 		} finally {
-			
+
 			if(success) {
 				
 				try {
+
 					con.commit();
+					
 				} catch (SQLException e) {
+					System.out.println("con.commitの例外処理");
 					e.printStackTrace();
+					
 				}
 				
 			} else {
 				
 				try {
+					
 					con.rollback();
+					
 				} catch (SQLException e) {
+					System.out.println("con.rollbackの例外処理");
 					e.printStackTrace();
+					
 				}
 				
 			}
@@ -113,34 +120,43 @@ public class StudentDao {
 				
 			}
 			
-			if (ps != null) {
+ 			
+			if(ps != null) {
 				
 				try {
-					
+
 					ps.close();
 					
-				} catch (SQLException e) {
-					
+				} catch(SQLException e) {
+					System.out.println("ps.closeの例外処理");
 					e.printStackTrace();
 					
 				}
 				
 			}
-
-			if (con != null) {
+			
+			if(con != null) {
+				
 				try {
+					
 					con.close();
-				} catch (SQLException e) {
+					
+				} catch(SQLException e) {
+					System.out.println("con.closeの例外処理");
 					e.printStackTrace();
+					
 				}
+				
 			}
+			
 		}
-
+		
 		return autoIncrementKey;
 	}
 	
-	
-	public boolean doDelete(int studentId){
+	public boolean doDelete(int scheduleId){
+		
+		System.out.println("dao入った");
 		
 		try {
 			
@@ -162,24 +178,25 @@ public class StudentDao {
 			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
 			con.setAutoCommit(false);
 			
-			System.out.println("delete手前");
+			System.out.println("delete手前shcedule");
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append(" DELETE STUDENT, SCHEDULE            ");
-			sb.append(" FROM STUDENT                        ");
-			sb.append(" LEFT JOIN SCHEDULE                  ");
-			sb.append(" ON STUDENT.ID = SCHEDULE.STUDENT_ID ");
-			sb.append(" WHERE STUDENT.ID = ?;               ");
+			sb.append(" DELETE FROM SCHEDULE       ");
+			sb.append(" WHERE ID = ?;               ");
 			
-			System.out.println("toString後");
+			System.out.println("toString後schedule");
 			
 			ps = con.prepareStatement(sb.toString());
 					
-			ps.setInt(1, studentId);
+			ps.setInt(1, scheduleId);
 			
-			ps.executeUpdate();
+			int result = ps.executeUpdate();
 			
-			success = true;
+			if(result == 1) {
+				success = true;
+			} else {
+				success = false;
+			}
 			
 		} catch(SQLException e) {
 			
@@ -222,18 +239,24 @@ public class StudentDao {
 			}
 
 			if (con != null) {
+				
 				try {
+					
 					con.close();
+					
 				} catch (SQLException e) {
+					
 					e.printStackTrace();
+					
 				}
 			}
 		}
+		
 		return success;
 	}
 	
 	
-	public boolean doUpdate(StudentDto dto) {
+	public boolean doUpdate(ScheduleDto dto) {
 		
 		try {
 			
@@ -250,7 +273,6 @@ public class StudentDao {
 		ResultSet rs = null;
 		
 		boolean success = false;
-		int autoIncrementKey = 0;
 		
 		try {
 			
@@ -258,27 +280,26 @@ public class StudentDao {
 			con.setAutoCommit(false);
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append(" UPDATE STUDENT     ");
+			sb.append(" UPDATE SCHEDULE    ");
 			sb.append(" SET                ");
-			sb.append("   NAME=?,          ");
-			sb.append("   SCHOOL_GRADE=?,  ");
-			sb.append("   GENDER=?,        ");
-			sb.append("   TEACHER_ID=?     ");
+			sb.append("   DATE_COLUMN=?,   ");
+			sb.append("   TIME_COLUMN=?,   ");
+			sb.append("   SUBJECT=?,       ");
+			sb.append("   HOMEWORK=?,      ");
+			sb.append("   MEMO=?           ");
 			sb.append(" WHERE  ID=?;       ");
 			
 			ps = con.prepareStatement(sb.toString());
 			
-			ps.setString(1, dto.getName());
-			ps.setString(2, dto.getSchoolGrade());
-			ps.setString(3, dto.getGender());
-			ps.setInt(4, dto.getTeacherId());
-			ps.setInt(5, dto.getStudentId());
+			ps.setString(1, dto.getDate());
+			ps.setString(2, dto.getTime());
+			ps.setString(3, dto.getSubject());
+			ps.setString(4, dto.getHomework());
+			ps.setString(5, dto.getMemo());
+			ps.setInt(6, dto.getScheduleId());
 			
-			System.out.println(dto.getStudentId());
 			
 			ps.executeUpdate();
-			
-			System.out.println(autoIncrementKey);
 			
 			success = true;
 			

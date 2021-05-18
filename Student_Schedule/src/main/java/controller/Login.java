@@ -42,7 +42,6 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		UserDto userWithSession = (UserDto)session.getAttribute("user");
 		
-		System.out.println(userWithSession);
 		
 		if(userWithSession != null) {
 			
@@ -57,42 +56,36 @@ public class Login extends HttpServlet {
 			boolean validatePass = validatePass(password);
 			
 			if(validateName == false || validatePass == false) {
-//				response.sendRedirect("loginPage.jsp");
-//				return;
+				
 				final String errorMsg = "ユーザーが見つかりませんでした。";
 				request.setAttribute("errorMsg", errorMsg);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("loginPage.jsp");
 				dispatcher.forward(request, response);
+				
 			}
 			
 			LoginLogic logic = new LoginLogic();
 			UserDto dto = logic.executeSelect(name, password);
 			
-			System.out.println("userDtoは突破したよ!!!!!!!");
-			System.out.println(dto.getName());
-			
-			
-//			if(dto != null) {
-//				StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
-//				List<StudentDto> studentList = studentMemberLogic.selectStudentMember(dto);
-//			}
 			
 			if(dto.getName() != null) {
-				
+				//////////////ここstudentLogicに変える
 				StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
 				List<StudentDto> studentList = studentMemberLogic.selectStudentMember(dto);
+				
+				System.out.println("抜け出した");
 				
 				session.setAttribute("user", dto);
 				session.setAttribute("studentList", studentList);
 				
-				System.out.println(session.getAttribute("studentList") instanceof List);
-				
-//				@SuppressWarnings("unchecked")
-//				List<StudentDto> studentList = (List<StudentDto>)session.getAttribute("studentList");
-				
-				
-				System.out.println("大丈夫!成功だ!");
-//				System.out.println(studentList == null);
+//				if(session.getAttribute("scheduleList") != null) {
+//					
+//					@SuppressWarnings("unchecked")
+//					List<ScheduleDto> scheduleList = (List<ScheduleDto>)session.getAttribute("scheduleList");
+//					session.setAttribute("scheduleList", scheduleList);
+//				}
+//				
+
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
 	    		dispatcher.forward(request, response);

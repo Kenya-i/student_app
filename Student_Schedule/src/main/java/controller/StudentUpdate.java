@@ -15,23 +15,33 @@ import model.StudentLogic;
 import model.StudentMemberLogic;
 import model.UserDto;
 
-
-@WebServlet("/Student")
-public class Student extends HttpServlet {
+/**
+ * Servlet implementation class StudentUpdate
+ */
+@WebServlet("/StudentUpdate")
+public class StudentUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	
-    public Student() {
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public StudentUpdate() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		doPost(request, response);
 	}
-	
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		// TODO Auto-generated method stub
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
@@ -43,12 +53,17 @@ public class Student extends HttpServlet {
 			String name = request.getParameter("name");
 			String schoolGrade = request.getParameter("school-grade");
 			String gender = request.getParameter("gender");
+			Integer studentId = (Integer)session.getAttribute("studentId");
+			
+			
+			
+			System.out.println(studentId);
 			
 			
 			boolean validateName = validateName(name);
 			
 			if(validateName == false) {
-				response.sendRedirect("studentRegister.jsp");
+				response.sendRedirect("studentUpdate.jsp");
 				return;
 			}
 			
@@ -56,118 +71,61 @@ public class Student extends HttpServlet {
 			dto.setName(name);
 			dto.setSchoolGrade(schoolGrade);
 			dto.setGender(gender);
+			dto.setStudentId(studentId);
 			dto.setTeacherId(Integer.parseInt(userWithSession.getId()));
 			
 			StudentLogic logic = new StudentLogic();
-			int studentId = logic.executeInsert(dto);
-//			StudentDto studentDto = logic.executeInsert(name, schoolGrade, gender);
+			boolean success = logic.executeUpdate(dto);
 			
-			if(studentId > 0) {
+			Integer num = (Integer)session.getAttribute("studentNumber");
+			
+			if(success) {
 				if(session.getAttribute("studentList") != null) {
 					
 					@SuppressWarnings("unchecked")
 					List<StudentDto> studentList = (List<StudentDto>)session.getAttribute("studentList");
-					int num = studentList.size();
-					dto.setStudentId(studentId); //データベースのインクリメントID
-					dto.setNumber(num);          //studentListにおける配列番号
-					studentList.add(dto);
+					StudentDto studentDto = studentList.get(num);
+					studentDto.setName(name);
+					studentDto.setSchoolGrade(schoolGrade);
+					studentDto.setGender(gender);
+					studentDto.setStudentId(studentId);
+					studentDto.setTeacherId(Integer.parseInt(userWithSession.getId()));
+					studentDto.setNumber(num);
+					studentList.set(num, studentDto);
 					session.setAttribute("studentList", studentList);
+					session.setAttribute("studentName", name);
+//					session.getAttribute("studentNumber")
 					System.out.println("Listある");
 					
 				} else {
-//					List<StudentDto> studentList = new ArrayList<StudentDto>();
-//					studentList.add(dto);
-//					session.setAttribute("studentList", dto);
 					StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
 					List<StudentDto> studentList = studentMemberLogic.selectStudentMember(userWithSession);
 					session.setAttribute("studentList", studentList);
+					session.setAttribute("studentName", name);
+//					session.getAttribute("studentNumber")
 				}
+				System.out.println("成功a!!!!");
 				
-				response.sendRedirect("home.jsp");
+				response.sendRedirect("schedulePage.jsp");
 			} else {
-				response.sendRedirect("studentRegister.jsp");
+				
+				System.out.println("失敗a!!!!");
+				response.sendRedirect("studentUpdate.jsp");
 			}
-			
+	
 			
 		} else {
 			
 			response.sendRedirect("loginPage.jsp");
 			
 		}
-		
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-//		1
-//		System.out.println(userWithSession);
-//		
-//		if(userWithSession != null) {
-		
-		
-		
 			
-//			String name = request.getParameter("name");
-//			String schoolGrade = request.getParameter("school-grade");
-//			String gender = request.getParameter("gender");
-//			
-//			StudentDto dto = new StudentDto();
-		
-		
-		
-//			1
-//			boolean validateName = validateName(name);
-//			
-//			if(validateName == false) {
-//				response.sendRedirect("studentRegister.jsp");
-//				return;
-//			}
-		
-		
-		
-		
 			
-//			dto.setName(name);
-//			dto.setSchoolGrade(schoolGrade);
-//			dto.setGender(gender);
-//			dto.setTeacherId((String)session.getAttribute("user"));
-//			
-//			System.out.println(dto.getTeacherId());
-//			System.out.println(dto.getTeacherId() instanceof String);
-		
-		
-		
-		
-			
-//			1
-//			StudentLogic logic = new StudentLogic();
-//			boolean successInsert = logic.executeInsert(dto);
-//			
-//			if(successInsert) {
-//				response.sendRedirect("home.jsp");
-//			} else {
-//				response.sendRedirect("studentRegister.jsp");
-//			}
-//			
-//		} else {
-//			
-//			
-//			response.sendRedirect("loginPage.jsp");
-//		}
-		
-		
-		
 	}
-
+		
 	
 	private boolean validateName(String name) {
-		
+			
 		boolean success = false;
 		
 		if(name != null || name != "" || name.length() >= 1 ) {
