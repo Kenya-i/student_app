@@ -27,7 +27,7 @@ public class Signup extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		doPost(request, response);
+		response.sendRedirect("loginPage.jsp");
 		
 	}
 
@@ -58,7 +58,6 @@ public class Signup extends HttpServlet {
 					                           (password, passwordConfirmation, request);
 			
 			if(validateName == false || validatePass == false || validatePassConfirmation == false) {
-				System.out.println("success");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("signupPage.jsp");
 	    		dispatcher.forward(request, response);
 				return;
@@ -69,19 +68,12 @@ public class Signup extends HttpServlet {
 			
 			SignupLogic signup = new SignupLogic();
 	    	Object[] insertResults = signup.isInsertable(userDto);
-
-	    	System.out.println("よくここまでたどり着いたらおぬしよ");
-	    	
-//	    	System.out.println(insertResults[1].toString());
 	    	
 	    	
 	    	String userId;
 	    	if(insertResults[1] != null) {
 	    		userId = insertResults[1].toString();
 	    		userDto.setId(userId);
-//		    	System.out.println(objStr);
-//		    	userId = Integer.parseInt(objStr);
-//		    	userDto.setId(userId);
 	    	}
 	    	
 	    	String objStr2 = insertResults[0].toString();
@@ -89,9 +81,6 @@ public class Signup extends HttpServlet {
 	    	
 	    	
 	    	if(bool) {
-	    		
-//	    		LoginLogic logic = new LoginLogic();
-//				UserDto userDto2 = logic.executeSelect(name, password);
 	    		
 	    		session.setAttribute("user", userDto);
 	    		
@@ -105,11 +94,6 @@ public class Signup extends HttpServlet {
 	    		request.setAttribute("registerErrorMsg", (Object)userDto.getRegisterError());
 	    		RequestDispatcher dispatcher = request.getRequestDispatcher("signupPage.jsp");
 	    		dispatcher.forward(request, response);
-	    		
-//	    		request.setAttribute("registerErrorMsg", (Object)dto.getRegisterError());
-	    		
-//	    		RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
-//	    		dispatcher.forward(request, response);
 	    		
 	    	}
 	    	
@@ -165,9 +149,6 @@ public class Signup extends HttpServlet {
 				success = false;
 			}
 		} else {
-			System.out.println(password);
-			System.out.println(passwordConfirmation);
-			System.out.println(password == passwordConfirmation);
 			final String passConfirmErrorMsg = "確認用パスワードが一致しませんでした。もう一度お試しください。";
 			request.setAttribute("passConfirmErrorMsg", passConfirmErrorMsg);
 			success = false;

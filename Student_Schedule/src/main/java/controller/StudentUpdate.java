@@ -15,33 +15,23 @@ import model.StudentLogic;
 import model.StudentMemberLogic;
 import model.UserDto;
 
-/**
- * Servlet implementation class StudentUpdate
- */
+
 @WebServlet("/StudentUpdate")
 public class StudentUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public StudentUpdate() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
@@ -54,10 +44,6 @@ public class StudentUpdate extends HttpServlet {
 			String schoolGrade = request.getParameter("school-grade");
 			String gender = request.getParameter("gender");
 			Integer studentId = (Integer)session.getAttribute("studentId");
-			
-			
-			
-			System.out.println(studentId);
 			
 			
 			boolean validateName = validateName(name);
@@ -94,22 +80,18 @@ public class StudentUpdate extends HttpServlet {
 					studentList.set(num, studentDto);
 					session.setAttribute("studentList", studentList);
 					session.setAttribute("studentName", name);
-//					session.getAttribute("studentNumber")
-					System.out.println("Listある");
 					
 				} else {
 					StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
 					List<StudentDto> studentList = studentMemberLogic.selectStudentMember(userWithSession);
 					session.setAttribute("studentList", studentList);
 					session.setAttribute("studentName", name);
-//					session.getAttribute("studentNumber")
+					
 				}
-				System.out.println("成功a!!!!");
 				
 				response.sendRedirect("schedulePage.jsp");
 			} else {
 				
-				System.out.println("失敗a!!!!");
 				response.sendRedirect("studentUpdate.jsp");
 			}
 	
@@ -119,7 +101,6 @@ public class StudentUpdate extends HttpServlet {
 			response.sendRedirect("loginPage.jsp");
 			
 		}
-			
 			
 	}
 		

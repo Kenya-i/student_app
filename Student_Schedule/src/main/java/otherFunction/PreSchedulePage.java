@@ -29,9 +29,6 @@ public class PreSchedulePage extends HttpServlet {
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("text/html;charset=UTF-8"); 
@@ -39,8 +36,6 @@ public class PreSchedulePage extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		UserDto userWithSession = (UserDto)session.getAttribute("user");
-		
-		System.out.println("preScheduleです");
 		
 		if(userWithSession != null) {
 			
@@ -53,26 +48,16 @@ public class PreSchedulePage extends HttpServlet {
 			session.setAttribute("studentId", studentId);
 			session.setAttribute("studentNumber", studentNumber);
 			
-			System.out.println(name);
-			System.out.println(studentId);
-			System.out.println(studentNumber);
-			
-			
 			if(session.getAttribute("scheduleList") != null) {
-//				List<ScheduleDto> scheduleList = (List<ScheduleDto>)session.getAttribute("scheduleList");
 				ScheduleListLogic scheduleListLogic = new ScheduleListLogic();
 				List<ScheduleDto> scheduleList = scheduleListLogic.selectScheduleList(studentId);
-				System.out.println("scheduleListあり");
 				session.setAttribute("scheduleList", scheduleList);
 			} else {
 				
-				System.out.println("scheduleListなし");
 				ScheduleListLogic scheduleListLogic = new ScheduleListLogic();
 				List<ScheduleDto> scheduleList = scheduleListLogic.selectScheduleList(studentId);
 				session.setAttribute("scheduleList", scheduleList);
 			}
-			
-			System.out.println("ここここここっここ");
 			
 			response.sendRedirect("schedulePage.jsp");
 			

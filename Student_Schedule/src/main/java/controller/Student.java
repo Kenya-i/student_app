@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,10 +47,22 @@ public class Student extends HttpServlet {
 			
 			
 			boolean validateName = validateName(name);
+			boolean nameLengthLimit = nameLengthLimit(name);
 			
 			if(validateName == false) {
-				response.sendRedirect("studentRegister.jsp");
+				final String error = "名前の入力は必須です";
+				request.setAttribute("error", error);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("studentRegister.jsp");
+				dispatcher.forward(request, response);
 				return;
+			}
+			
+			if(nameLengthLimit == false) {
+				final String error = "名前が20文字を超えています";
+				request.setAttribute("error", error);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("studentRegister.jsp");
+				dispatcher.forward(request, response);
+				
 			}
 			
 			StudentDto dto = new StudentDto();
@@ -60,7 +73,6 @@ public class Student extends HttpServlet {
 			
 			StudentLogic logic = new StudentLogic();
 			int studentId = logic.executeInsert(dto);
-//			StudentDto studentDto = logic.executeInsert(name, schoolGrade, gender);
 			
 			if(studentId > 0) {
 				if(session.getAttribute("studentList") != null) {
@@ -72,12 +84,8 @@ public class Student extends HttpServlet {
 					dto.setNumber(num);          //studentListにおける配列番号
 					studentList.add(dto);
 					session.setAttribute("studentList", studentList);
-					System.out.println("Listある");
 					
 				} else {
-//					List<StudentDto> studentList = new ArrayList<StudentDto>();
-//					studentList.add(dto);
-//					session.setAttribute("studentList", dto);
 					StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
 					List<StudentDto> studentList = studentMemberLogic.selectStudentMember(userWithSession);
 					session.setAttribute("studentList", studentList);
@@ -95,83 +103,26 @@ public class Student extends HttpServlet {
 			
 		}
 		
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-//		1
-//		System.out.println(userWithSession);
-//		
-//		if(userWithSession != null) {
-		
-		
-		
-			
-//			String name = request.getParameter("name");
-//			String schoolGrade = request.getParameter("school-grade");
-//			String gender = request.getParameter("gender");
-//			
-//			StudentDto dto = new StudentDto();
-		
-		
-		
-//			1
-//			boolean validateName = validateName(name);
-//			
-//			if(validateName == false) {
-//				response.sendRedirect("studentRegister.jsp");
-//				return;
-//			}
-		
-		
-		
-		
-			
-//			dto.setName(name);
-//			dto.setSchoolGrade(schoolGrade);
-//			dto.setGender(gender);
-//			dto.setTeacherId((String)session.getAttribute("user"));
-//			
-//			System.out.println(dto.getTeacherId());
-//			System.out.println(dto.getTeacherId() instanceof String);
-		
-		
-		
-		
-			
-//			1
-//			StudentLogic logic = new StudentLogic();
-//			boolean successInsert = logic.executeInsert(dto);
-//			
-//			if(successInsert) {
-//				response.sendRedirect("home.jsp");
-//			} else {
-//				response.sendRedirect("studentRegister.jsp");
-//			}
-//			
-//		} else {
-//			
-//			
-//			response.sendRedirect("loginPage.jsp");
-//		}
-		
-		
-		
 	}
 
 	
 	private boolean validateName(String name) {
 		
-		boolean success = false;
+		boolean success = true;
 		
-		if(name != null || name != "" || name.length() >= 1 ) {
-			success = true;
+		if(name == null || name == "" || name.length() == 0 ) {
+			success = false;
+		}
+		
+		return success;
+	}
+	
+	private boolean nameLengthLimit(String name) {
+		
+		boolean success = true;
+		
+		if(name.length() > 20) {
+			success = false;
 		}
 		
 		return success;

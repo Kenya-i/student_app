@@ -49,24 +49,13 @@ public class StudentMemberDao {
 			sb.append("  STUDENT        ");
 			sb.append(" WHERE           ");
 			sb.append("  TEACHER_ID = ? ");
-
 			
 			ps = con.prepareStatement(sb.toString());
-			
 			int id = Integer.parseInt(userDto.getId());
-			
-			System.out.println(id);
-			System.out.println("ユーザーのID");
 			
 			ps.setInt(1, id);
 			
-			System.out.println("ここ1");
-			
-			System.out.println(ps);
-			
 			rs = ps.executeQuery();
-			
-			System.out.println("ここ2");
 			
 			int num = 0;
 			while(rs.next()) {
@@ -90,9 +79,6 @@ public class StudentMemberDao {
 			
 		} catch(SQLException e) {
 			
-			System.out.println("ここ5");
-			
-			System.out.println("error!!!");
 			e.printStackTrace();
 			
 		} finally {

@@ -14,24 +14,15 @@ import model.ScheduleDto;
 import model.ScheduleLogic;
 import model.UserDto;
 
-/**
- * Servlet implementation class ScheduleUpdate
- */
+
 @WebServlet("/ScheduleUpdate")
 public class ScheduleUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public ScheduleUpdate() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		doPost(request, response);
@@ -48,24 +39,18 @@ public class ScheduleUpdate extends HttpServlet {
 		
 		if(userWithSession != null) {
 			
-//			Integer num = (Integer)request.getAttribute("scheduleNumber");
-//			Integer id = (Integer)request.getAttribute("scheduleId");
 			Integer num = (Integer)session.getAttribute("scheduleNumber");
 			Integer id = (Integer)session.getAttribute("scheduleId");
-			System.out.println(id);
 			String date = request.getParameter("date");
 			String time = request.getParameter("time");
 			String subject = request.getParameter("subject");
 			String homework = request.getParameter("homework");
 			String memo = request.getParameter("memo");
 			
-			System.out.println("if前");
-			
 			if(id == null || date == null || time == null || subject == null) {
 				response.sendRedirect("scheduleUpdate.jsp");
 			}
 			
-			System.out.println("hogehogehogeohoe");
 			
 			ScheduleDto dto = new ScheduleDto();
 			dto.setScheduleId(id);
@@ -93,9 +78,6 @@ public class ScheduleUpdate extends HttpServlet {
 					scheduleDto.setNumber(num);
 					scheduleList.set(num, scheduleDto);
 					session.setAttribute("scheduleList", scheduleList);
-//					session.setAttribute("studentName", name);
-//					session.getAttribute("studentNumber")
-					System.out.println("Listある");
 					
 				} else {
 //					StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
@@ -104,12 +86,10 @@ public class ScheduleUpdate extends HttpServlet {
 //					session.setAttribute("studentName", name);
 //					session.getAttribute("studentNumber")
 				}
-				System.out.println("成功a!!!!");
 				
 				response.sendRedirect("schedulePage.jsp");
 			} else {
 				
-				System.out.println("失敗a!!!!");
 				response.sendRedirect("scheduleUpdate.jsp");
 			}
 	

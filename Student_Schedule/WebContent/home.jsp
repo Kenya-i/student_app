@@ -12,15 +12,35 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.user-name {
-	margin: 20px 0;
+.top-title {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
-.studentBox {
+.top-sub {
+	text-align: center;
+}
+
+.student-wrapper {
+	text-align: center;
+}
+
+.no-register {
+	text-align: center;
+	margin-top: 20px;
+	font-weight: bold;
+}
+
+.student-box {
 	background-color: white;
 	width: 40%;
 	border-radius: 10px;
-	margin: 0 10px 10px 10px;
+	text-align: center;
+	margin: 10px auto;
+	
 }
 
 .student-wrapper {
@@ -30,29 +50,63 @@
 </head>
 <body>
 	<%@include file= "header.jsp" %>
-	<div class="user-name">${user.name}さんの生徒一覧</div>
-	<!-- <div class="student-wrapper"> -->
-		<c:choose>
-			<c:when test="${studentList != null}">
+	<div>
+		<div class="top-title">
+			${user.name}さんの生徒一覧
+		</div>
+		<div class="top-sub">
+			<a href="studentRegister.jsp">生徒の登録</a>
+		</div>
+	</div>
+	<c:choose>
+		<c:when test="${studentList[0] != null}">
+			<div class="student-wrapper">
 				<c:forEach var="student" items="${studentList}" >
-					<div class="studentBox">
-						名前: 
-						<form action="PreSchedulePage" method="post">
-							<input type="hidden" value="${student.name}" name="studentName">
-							<input type="hidden" value="${student.studentId}" name="studentId">   <!-- 生徒のID -->
-							<input type="hidden" value="${student.number}" name="studentNumber">
-							<input type="submit" value="${student.name}"
-							style="font-size:15px;border:none;background-color:transparent;color:blue;text-decoration:none;">
-						</form>
-						<div>学年: ${student.schoolGrade}</div>
-						<div>性別: ${student.gender}</div>
+					<!-- <div class="student-wrapper"> -->
+						<div class="student-box">
+							<table>
+								<tr>
+									<th>
+										名前
+									</th>
+									<td>
+										<form action="PreSchedulePage" method="post">
+											<input type="hidden" value="${student.name}" name="studentName">
+											<input type="hidden" value="${student.studentId}" name="studentId">   <!-- 生徒のID -->
+											<input type="hidden" value="${student.number}" name="studentNumber">
+											<input type="submit" value="${student.name}"
+											style="font-size:15px;border:none;background-color:transparent;color:blue;text-decoration:none;">
+										</form>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										学年
+									</th>
+									<td>
+										${student.schoolGrade}
+									</td>
+								</tr>
+								<tr>
+									<th>
+										性別
+									</th>
+									<td>
+										${student.gender}
+									</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</c:forEach>
-			</c:when>
-		</c:choose>
-	<!-- </div> -->
-	<div><a href="studentRegister.jsp">生徒の登録</a></div>
-	<div><a href="Logout">ログアウト</a></div>
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div class="no-register">
+				生徒は登録されていません
+			</div>
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>
 <% } %> 

@@ -34,8 +34,6 @@ public class Login extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("hoge10");
-		
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
@@ -69,24 +67,12 @@ public class Login extends HttpServlet {
 			
 			
 			if(dto.getName() != null) {
-				//////////////ここstudentLogicに変える
 				StudentMemberLogic studentMemberLogic = new StudentMemberLogic();
 				List<StudentDto> studentList = studentMemberLogic.selectStudentMember(dto);
 				
-				System.out.println("抜け出した");
-				
 				session.setAttribute("user", dto);
 				session.setAttribute("studentList", studentList);
-				
-//				if(session.getAttribute("scheduleList") != null) {
-//					
-//					@SuppressWarnings("unchecked")
-//					List<ScheduleDto> scheduleList = (List<ScheduleDto>)session.getAttribute("scheduleList");
-//					session.setAttribute("scheduleList", scheduleList);
-//				}
-//				
 
-				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
 	    		dispatcher.forward(request, response);
 	    		

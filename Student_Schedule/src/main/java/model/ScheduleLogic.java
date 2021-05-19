@@ -13,7 +13,6 @@ public class ScheduleLogic {
 	
 	public boolean executeDelete(int scheduleId) {
 		
-		System.out.println("scheduleLogic");
 		
 		ScheduleDao dao = new ScheduleDao();
 		boolean success = dao.doDelete(scheduleId);

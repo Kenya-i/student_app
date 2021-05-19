@@ -27,7 +27,7 @@ public class Schedule extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 
@@ -38,8 +38,6 @@ public class Schedule extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		UserDto userWithSession = (UserDto)session.getAttribute("user");
-		
-		System.out.println("まずここ");
 		
 		if(userWithSession == null) {
 			
@@ -77,16 +75,13 @@ public class Schedule extends HttpServlet {
 					
 					@SuppressWarnings("unchecked")
 					List<ScheduleDto> scheduleList = (List<ScheduleDto>)session.getAttribute("scheduleList");
-					System.out.println(scheduleList.size());
 					dto.setScheduleId(scheduleId);
 					dto.setNumber(scheduleList.size());
 					scheduleList.add(dto);
 					session.setAttribute("scheduleList", scheduleList);
-					
-					System.out.println("studentListのsessionあるよ");
+
 				} else {
 					
-					System.out.println("studentListのsessionないよ");
 					ScheduleListLogic scheduleListLogic = new ScheduleListLogic();
 					List<ScheduleDto> scheduleList = scheduleListLogic.selectScheduleList(scheduleId);
 					dto.setScheduleId(scheduleId);
@@ -96,10 +91,9 @@ public class Schedule extends HttpServlet {
 					
 				}
 				
-			System.out.println("追加できたよ");
 				response.sendRedirect("schedulePage.jsp");
 			} else {
-			System.out.println("Register");
+
 				response.sendRedirect("scheduleRegisterPage.jsp");
 			}
 			

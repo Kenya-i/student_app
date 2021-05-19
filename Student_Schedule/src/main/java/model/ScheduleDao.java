@@ -41,8 +41,6 @@ public class ScheduleDao {
 			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
 			con.setAutoCommit(false);
 			
-			System.out.println("今ここ");
-			
 			StringBuffer sb = new StringBuffer();
 			sb.append(" INSERT INTO SCHEDULE ( ");
 			sb.append(" DATE_COLUMN,           ");
@@ -71,7 +69,6 @@ public class ScheduleDao {
 				autoIncrementKey = rs.getInt(1);
 			}
 			
-			System.out.println("成功しましたtたたたた");
 			success = true;
 		} catch(SQLException e) {
 			
@@ -87,7 +84,7 @@ public class ScheduleDao {
 					con.commit();
 					
 				} catch (SQLException e) {
-					System.out.println("con.commitの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -99,7 +96,7 @@ public class ScheduleDao {
 					con.rollback();
 					
 				} catch (SQLException e) {
-					System.out.println("con.rollbackの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -113,7 +110,7 @@ public class ScheduleDao {
 					rs.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -128,7 +125,7 @@ public class ScheduleDao {
 					ps.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -142,7 +139,7 @@ public class ScheduleDao {
 					con.close();
 					
 				} catch(SQLException e) {
-					System.out.println("con.closeの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -155,8 +152,6 @@ public class ScheduleDao {
 	}
 	
 	public boolean doDelete(int scheduleId){
-		
-		System.out.println("dao入った");
 		
 		try {
 			
@@ -178,14 +173,10 @@ public class ScheduleDao {
 			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
 			con.setAutoCommit(false);
 			
-			System.out.println("delete手前shcedule");
-			
 			StringBuffer sb = new StringBuffer();
 			sb.append(" DELETE FROM SCHEDULE       ");
 			sb.append(" WHERE ID = ?;               ");
-			
-			System.out.println("toString後schedule");
-			
+
 			ps = con.prepareStatement(sb.toString());
 					
 			ps.setInt(1, scheduleId);
@@ -304,8 +295,6 @@ public class ScheduleDao {
 			success = true;
 			
 		} catch(SQLException e) {
-			System.out.println(e);
-			System.out.println("例外");
 			
 			e.printStackTrace();
 			success = false;
@@ -337,7 +326,7 @@ public class ScheduleDao {
 					rs.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+
 					e.printStackTrace();
 					
 				}

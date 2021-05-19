@@ -58,7 +58,6 @@ public class ScheduleListDao {
 			
 			int num = 0;
 			while(rs.next()) {
-				System.out.println("ここスケジュール!!!");
 				ScheduleDto dto = new ScheduleDto();
 				dto.setScheduleId(rs.getInt("ID"));
 				dto.setDate(rs.getString("DATE_COLUMN"));
@@ -68,15 +67,11 @@ public class ScheduleListDao {
 				dto.setMemo(rs.getString("MEMO"));
 				dto.setNumber(num);
 				scheduleList.add(dto);
-				System.out.println(num);
 				num++;
 			}
 			
 		} catch(SQLException e) {
 			
-			System.out.println("ここ5");
-			
-			System.out.println("error!!!");
 			e.printStackTrace();
 			
 		} finally {

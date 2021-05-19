@@ -58,14 +58,7 @@ public class UserDao {
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				System.out.println("whileの中だよ");
-				System.out.println(dto.getName());
-				System.out.println(dto.getPassword());
-				System.out.println(rs.getString("NAME"));
-				System.out.println(rs.getString("PASSWORD"));
-				System.out.println(rs.getString("NAME") == dto.getName());
 				if(rs.getString("NAME").equals(dto.getName()) && rs.getString("PASSWORD").equals(dto.getPassword()) ) {
-					System.out.println("whileのなかの失敗だよ");
 					success = false; // 登録できない(false) →失敗
 				}
 			}
@@ -93,29 +86,10 @@ public class UserDao {
 		             autoIncrementKey = rs2.getInt(1);
 		         }
 				
-				
-				
-//				StringBuffer sb3 = new StringBuffer();
-//				sb3.append(" SELECT           ");
-//				sb3.append(" LAST_INSERT_ID(); ");
-//				
-//				ps3 = con.prepareStatement(sb3.toString());
-//				
-//				rs2 = ps3.executeQuery();
-//				
-//				System.out.println(rs2);
-//				
-//				if(rs2.next()) {
-//					System.out.println("rs2に入りました。");
-//					dto.setId(String.valueOf(rs2.getInt("ID")));
-//				}
-				
-				
-				System.out.println("successに入ったよ");
 			}
 			
 		} catch(SQLException e) {
-			System.out.println("ayayato");
+			
 			e.printStackTrace();
 			success = false;
 			
@@ -128,7 +102,7 @@ public class UserDao {
 					con.commit();
 					
 				} catch (SQLException e) {
-					System.out.println("con.commitの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -140,7 +114,7 @@ public class UserDao {
 					con.rollback();
 					
 				} catch (SQLException e) {
-					System.out.println("con.rollbackの例外処理");
+
 					e.printStackTrace();
 					
 				}
@@ -154,7 +128,7 @@ public class UserDao {
 					rs2.close();
 					
 				} catch(SQLException e) {
-					System.out.println("rs.closeの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -167,7 +141,7 @@ public class UserDao {
 					rs.close();
 					
 				} catch(SQLException e) {
-					System.out.println("rs.closeの例外処理");
+
 					e.printStackTrace();
 					
 				}
@@ -206,7 +180,7 @@ public class UserDao {
 					ps.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+
 					e.printStackTrace();
 					
 				}
@@ -220,7 +194,7 @@ public class UserDao {
 					con.close();
 					
 				} catch(SQLException e) {
-					System.out.println("con.closeの例外処理");
+
 					e.printStackTrace();
 					
 				}
@@ -228,13 +202,9 @@ public class UserDao {
 			}
 			
 		}
-		
-		System.out.println("たどり着いたよ!");
+
 		obj[0] = success;
 		obj[1] = autoIncrementKey;
-		
-		System.out.println(obj[1]);
-		System.out.println("まだdao");
 		
 		return obj;
 	}
@@ -271,42 +241,20 @@ public class UserDao {
 			sb.append(" PASSWORD = ? ");
 			
 			ps = con.prepareStatement(sb.toString());
-			System.out.println(sb.toString());
-			
 			ps.setString(1, name);
 			ps.setString(2, password);
 			
-			System.out.println(ps);
-			
-			System.out.println(sb.toString());
-			
 			rs = ps.executeQuery();
 			
-			System.out.println(rs);
-			System.out.println("もしかして失敗?");
-			
-//			if(rs == null) {
-//				
-//			}
-			
 			if(rs == null) {
-				System.out.println("rsはnullです");
 				dto = null;
 			} else if(rs.next()) {
 				dto.setId(String.valueOf(rs.getString("ID")));
 				dto.setName(rs.getString("NAME"));
 			}
-//			if(rs.next()) {
-//				dto.setId(String.valueOf(rs.getString("ID")));
-//				dto.setName(rs.getString("NAME"));
-//			} else {
-//				dto = null;
-//			}
-			System.out.println("ワイはここまで来たんや!!");
 			
 		} catch(SQLException e) {
 			
-			System.out.println("error!!!");
 			e.printStackTrace();
 			
 		} finally {
@@ -315,7 +263,6 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
-					System.out.println("33333333");
 					e.printStackTrace();
 				}
 			}
@@ -324,7 +271,6 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
-					System.out.println("2222222");
 					e.printStackTrace();
 				}
 			}
@@ -333,7 +279,6 @@ public class UserDao {
 				try {
 					rs.close();
 				} catch(SQLException e) {
-					System.out.println("11111111");
 					e.printStackTrace();
 				}
 			}

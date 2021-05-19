@@ -51,11 +51,9 @@ public class StudentDao {
 			sb.append(" ?,                    ");
 			sb.append(" ?,                    ");
 			sb.append(" ?                   ) ");
-			System.out.println("insert");
 			
 			ps = con.prepareStatement(sb.toString(), java.sql.Statement.RETURN_GENERATED_KEYS);
 			
-			System.out.println(ps);
 			
 			ps.setString(1, dto.getName());
 			ps.setString(2, dto.getSchoolGrade());
@@ -73,8 +71,6 @@ public class StudentDao {
 			
 			
 		} catch(SQLException e) {
-			System.out.println(e);
-			System.out.println("例外");
 			
 			e.printStackTrace();
 			success = false;
@@ -106,7 +102,7 @@ public class StudentDao {
 					rs.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+					
 					e.printStackTrace();
 					
 				}
@@ -162,7 +158,7 @@ public class StudentDao {
 			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
 			con.setAutoCommit(false);
 			
-			System.out.println("delete手前");
+
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append(" DELETE STUDENT, SCHEDULE            ");
@@ -170,8 +166,6 @@ public class StudentDao {
 			sb.append(" LEFT JOIN SCHEDULE                  ");
 			sb.append(" ON STUDENT.ID = SCHEDULE.STUDENT_ID ");
 			sb.append(" WHERE STUDENT.ID = ?;               ");
-			
-			System.out.println("toString後");
 			
 			ps = con.prepareStatement(sb.toString());
 					
@@ -250,7 +244,7 @@ public class StudentDao {
 		ResultSet rs = null;
 		
 		boolean success = false;
-		int autoIncrementKey = 0;
+
 		
 		try {
 			
@@ -274,17 +268,11 @@ public class StudentDao {
 			ps.setInt(4, dto.getTeacherId());
 			ps.setInt(5, dto.getStudentId());
 			
-			System.out.println(dto.getStudentId());
-			
 			ps.executeUpdate();
-			
-			System.out.println(autoIncrementKey);
 			
 			success = true;
 			
 		} catch(SQLException e) {
-			System.out.println(e);
-			System.out.println("例外");
 			
 			e.printStackTrace();
 			success = false;
@@ -316,7 +304,7 @@ public class StudentDao {
 					rs.close();
 					
 				} catch(SQLException e) {
-					System.out.println("ps.closeの例外処理");
+
 					e.printStackTrace();
 					
 				}
