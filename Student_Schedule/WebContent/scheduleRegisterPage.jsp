@@ -133,8 +133,8 @@ textarea {
 					</td>
 				</tr>
 			</table>
-		</form>
 		<input type="submit" value="登録">
+		</form>
 	</div>
 	<div class="back">
 		<a href="schedulePage.jsp">授業日程一覧に戻る</a>
